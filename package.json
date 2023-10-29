@@ -1,0 +1,10 @@
+{
+  "name": "holyjs-2024",
+  "version": "1.0.0",
+  "devDependencies": {
+    "prettier": "^3.0.3"
+  },
+  "scripts": {
+    "prettier": "prettier . --write"
+  }
+}
