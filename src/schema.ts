@@ -10,6 +10,12 @@ type UndefinedToOptional<T> = {
 
 type TupleToUnion<T extends ReadonlyArray<unknown>> = T[number];
 
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
+  k: infer I,
+) => void
+  ? I
+  : never;
+
 enum ITypeName {
   String = "S",
   Number = "N",
@@ -52,7 +58,10 @@ type ISomeRecord = [
 ];
 type ISomeArray = [ITypeName.Array, IStrictType<IAnyType>];
 type ISomeUnion = [ITypeName.Union, ReadonlyArray<IStrictType<IAnyType>>];
-type ISomeIntersection = [ITypeName.Intersection, ReadonlyArray<IStrictType<IAnyType>>];
+type ISomeIntersection = [
+  ITypeName.Intersection,
+  ReadonlyArray<IStrictType<IAnyType>>,
+];
 
 type IAnyType =
   | IString
@@ -108,6 +117,10 @@ type IRealType<T extends IAnyType> = T extends IString
   ? R extends ReadonlyArray<IStrictType<IAnyType>>
     ? TypeOf<TupleToUnion<R>>
     : never
+  : T extends IIntersection<infer R>
+  ? R extends ReadonlyArray<IStrictType<IAnyType>>
+    ? UnionToIntersection<TypeOf<TupleToUnion<R>>>
+    : never
   : never;
 
 export type TypeOf<R> = R extends IStrictType<infer T>
@@ -133,8 +146,9 @@ export const t: SchemaConstructor = {
   number: type(ITypeName.Number),
   boolean: type(ITypeName.Boolean),
   null: type(ITypeName.Null),
-    literal: type(ITypeName.Literal),
+  literal: type(ITypeName.Literal),
   record: type(ITypeName.Record),
   array: type(ITypeName.Array),
   union: type(ITypeName.Union),
+  intersection: type(ITypeName.Intersection),
 };
