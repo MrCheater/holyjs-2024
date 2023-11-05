@@ -1,67 +1,67 @@
 type UndefinedToOptional<T> = {
   [K in keyof T]-?: (
-    x: undefined extends T[K] ? { [P in K]?: T[K] } : { [P in K]: T[K] },
-  ) => void;
+    x: undefined extends T[K] ? { [P in K]?: T[K] } : { [P in K]: T[K] }
+  ) => void
 }[keyof T] extends (x: infer I) => void
   ? I extends infer U
     ? { [K in keyof U]: U[K] }
     : never
-  : never;
+  : never
 
-type TupleToUnion<T extends ReadonlyArray<unknown>> = T[number];
+type TupleToUnion<T extends ReadonlyArray<unknown>> = T[number]
 
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
-  k: infer I,
+  k: infer I
 ) => void
   ? I
-  : never;
+  : never
 
-enum ITypeName {
-  String = "S",
-  Number = "N",
-  Boolean = "B",
-  Null = "V",
-  Record = "R",
-  Array = "A",
-  Union = "U",
-  Literal = "L",
-  Intersection = "I",
+export const enum ITypeName {
+  String,
+  Number,
+  Boolean,
+  Null,
+  Object,
+  Array,
+  Union,
+  Literal,
+  Intersection
 }
 
-enum ITypeMode {
-  Strict = "!",
-  Optional = "?",
+export const enum ITypeMode {
+  Strict,
+  Optional
 }
 
-type IString = [ITypeName.String, void];
-type INumber = [ITypeName.Number, void];
-type IBoolean = [ITypeName.Boolean, void];
-type INull = [ITypeName.Null, void];
-type ILiteral<T extends string> = [ITypeName.Literal, T];
-type IRecord<
-  T extends Record<string, IStrictType<IAnyType> | IOptionalType<IAnyType>>,
-> = [ITypeName.Record, T];
-type IArray<T extends IStrictType<IAnyType>> = [ITypeName.Array, T];
+type IString = [ITypeName.String, void]
+type INumber = [ITypeName.Number, void]
+type IBoolean = [ITypeName.Boolean, void]
+type INull = [ITypeName.Null, void]
+type ILiteral<T extends string> = [ITypeName.Literal, T]
+type IObject<
+  T extends Record<string, IStrictType<IAnyType> | IOptionalType<IAnyType>>
+> = [ITypeName.Object, T]
+type IArray<T extends IStrictType<IAnyType>> = [ITypeName.Array, T]
 type IUnion<T extends ReadonlyArray<IStrictType<IAnyType>>> = [
   ITypeName.Union,
-  T,
-];
+  T
+]
 type IIntersection<T extends ReadonlyArray<IStrictType<IAnyType>>> = [
   ITypeName.Intersection,
-  T,
-];
+  T
+]
 
-type ISomeLiteral = [ITypeName.Literal, string];
-type ISomeRecord = [
-  ITypeName.Record,
-  Record<string, IStrictType<IAnyType> | IOptionalType<IAnyType>>,
-];
-type ISomeArray = [ITypeName.Array, IStrictType<IAnyType>];
-type ISomeUnion = [ITypeName.Union, ReadonlyArray<IStrictType<IAnyType>>];
+type ISomeLiteral = [ITypeName.Literal, string]
+type ISomeObject = [
+  ITypeName.Object,
+  Record<string, IStrictType<IAnyType> | IOptionalType<IAnyType>>
+]
+type ISomeArray = [ITypeName.Array, IStrictType<IAnyType>]
+type ISomeUnion = [ITypeName.Union, ReadonlyArray<IStrictType<IAnyType>>]
 type ISomeIntersection = [
   ITypeName.Intersection,
-  ReadonlyArray<IStrictType<IAnyType>>,
-];
+  ReadonlyArray<IStrictType<IAnyType>>
+]
 
 type IAnyType =
   | IString
@@ -69,33 +69,33 @@ type IAnyType =
   | IBoolean
   | INull
   | ISomeLiteral
-  | ISomeRecord
+  | ISomeObject
   | ISomeArray
   | ISomeUnion
-  | ISomeIntersection;
+  | ISomeIntersection
 
-type IOptionalType<T extends IAnyType> = [ITypeMode.Optional, T];
-type IStrictType<T extends IAnyType> = [ITypeMode.Strict, T];
+type IOptionalType<T extends IAnyType> = [ITypeMode.Optional, T]
+type IStrictType<T extends IAnyType> = [ITypeMode.Strict, T]
 
 type SchemaConstructor = {
-  string: () => IType<IString>;
-  number: () => IType<INumber>;
-  boolean: () => IType<IBoolean>;
-  null: () => IType<INull>;
-  literal: <T extends string>(_: T) => IType<ILiteral<T>>;
-  record: <
-    T extends Record<string, IStrictType<IAnyType> | IOptionalType<IAnyType>>,
+  string: () => IType<IString>
+  number: () => IType<INumber>
+  boolean: () => IType<IBoolean>
+  null: () => IType<INull>
+  literal: <T extends string>(_: T) => IType<ILiteral<T>>
+  object: <
+    T extends Record<string, IStrictType<IAnyType> | IOptionalType<IAnyType>>
   >(
-    _: T,
-  ) => IType<IRecord<T>>;
-  array: <T extends IStrictType<IAnyType>>(_: T) => IType<IArray<T>>;
+    _: T
+  ) => IType<IObject<T>>
+  array: <T extends IStrictType<IAnyType>>(_: T) => IType<IArray<T>>
   union: <T extends ReadonlyArray<IStrictType<IAnyType>>>(
-    _: T,
-  ) => IType<IUnion<T>>;
+    _: T
+  ) => IType<IUnion<T>>
   intersection: <T extends ReadonlyArray<IStrictType<IAnyType>>>(
-    _: T,
-  ) => IType<IIntersection<T>>;
-};
+    _: T
+  ) => IType<IIntersection<T>>
+}
 
 type IRealType<T extends IAnyType> = T extends IString
   ? string
@@ -107,7 +107,7 @@ type IRealType<T extends IAnyType> = T extends IString
   ? null
   : T extends ILiteral<infer R>
   ? R
-  : T extends IRecord<infer R>
+  : T extends IObject<infer R>
   ? UndefinedToOptional<{ [K in keyof R]: TypeOf<R[K]> }>
   : T extends IArray<infer R>
   ? R extends [ITypeMode, IAnyType]
@@ -121,25 +121,22 @@ type IRealType<T extends IAnyType> = T extends IString
   ? R extends ReadonlyArray<IStrictType<IAnyType>>
     ? UnionToIntersection<TypeOf<TupleToUnion<R>>>
     : never
-  : never;
+  : never
 
 export type TypeOf<R> = R extends IStrictType<infer T>
   ? IRealType<T>
   : R extends IOptionalType<infer T>
   ? IRealType<T> | undefined
-  : never;
+  : never
 
-type IType<T extends IAnyType> = IStrictType<T> & {
-  optional(): IOptionalType<T>;
-};
+export type IType<T extends IAnyType> = IStrictType<T> & {
+  optional(): IOptionalType<T>
+}
 
-const type = (type: ITypeName) => (value?: any) =>
-  Object.defineProperty([ITypeMode.Strict, [type, value]], "optional", {
-    enumerable: false,
-    configurable: false,
-    writable: false,
-    value: () => [ITypeMode.Optional, [type, value]],
-  }) as any;
+const type = (name: ITypeName) => (value?: any) =>
+  Object.defineProperty([ITypeMode.Strict, [name, value]], "optional", {
+    value: () => [ITypeMode.Optional, [name, value]]
+  }) as any
 
 export const t: SchemaConstructor = {
   string: type(ITypeName.String),
@@ -147,8 +144,8 @@ export const t: SchemaConstructor = {
   boolean: type(ITypeName.Boolean),
   null: type(ITypeName.Null),
   literal: type(ITypeName.Literal),
-  record: type(ITypeName.Record),
+  object: type(ITypeName.Object),
   array: type(ITypeName.Array),
   union: type(ITypeName.Union),
-  intersection: type(ITypeName.Intersection),
-};
+  intersection: type(ITypeName.Intersection)
+}
