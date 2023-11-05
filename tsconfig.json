@@ -2,9 +2,11 @@
   "compilerOptions": {
     "module": "ESNext",
     "target": "ESNext",
-    "sourceMap": true,
     "strict": true,
-    "noUncheckedIndexedAccess": true
+    "noUncheckedIndexedAccess": true,
+    "outDir": "lib",
+    "removeComments": true,
+    "sourceMap": false
   },
   "exclude": ["node_modules"],
   "include": ["src/**/*.ts"]

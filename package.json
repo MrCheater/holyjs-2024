@@ -2,9 +2,11 @@
   "name": "holyjs-2024",
   "version": "1.0.0",
   "devDependencies": {
-    "prettier": "^3.0.3"
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2"
   },
   "scripts": {
-    "prettier": "prettier . --write"
+    "prettier": "prettier . --write",
+    "build": "tsc"
   }
 }
