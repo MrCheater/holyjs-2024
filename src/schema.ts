@@ -129,7 +129,7 @@ export type TypeOf<R> = R extends IStrictType<infer T>
   ? IRealType<T> | undefined
   : never
 
-export type IType<T extends IAnyType> = IStrictType<T> & {
+export type IType<T extends IAnyType = IAnyType> = IStrictType<T> & {
   optional(): IOptionalType<T>
 }
 
