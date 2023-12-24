@@ -6,4 +6,3 @@ export type MapFunctions<
     ...args: TDeclarations[T][0]
   ) => TDeclarations[T][1]
 }
-

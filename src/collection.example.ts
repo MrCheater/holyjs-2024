@@ -1,10 +1,11 @@
-import { MapFunctions } from "./collection"
+import type { MapFunctions } from "./collection"
 
 const enum Operations {
   PUSH = "push",
   POP = "pop",
   REVERSE = "reverse"
 }
+
 type ICollection<TItem> = MapFunctions<
   Operations,
   {

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "devDependencies": {
     "prettier": "3.0.3",
-    "typescript": "^5.3.2"
+    "typescript": "^5.3.3"
   },
   "scripts": {
     "prettier": "prettier . --write",
