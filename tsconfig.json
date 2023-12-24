@@ -6,7 +6,8 @@
     "noUncheckedIndexedAccess": true,
     "outDir": "lib",
     "removeComments": true,
-    "sourceMap": false
+    "sourceMap": false,
+    "allowJs": true
   },
   "exclude": ["node_modules"],
   "include": ["src/**/*.ts"]
